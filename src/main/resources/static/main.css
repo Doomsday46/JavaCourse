@@ -1,0 +1,24 @@
+.main-site-container {
+    padding-top: 10px;
+}
+
+.form-control {
+    margin-bottom: 10px;
+}
+
+.invalid-feedback {
+    display: block;
+    margin: 4px auto 10px;
+}
+
+.nav-right-button {
+    margin: auto 4px;
+}
+
+.actions-cell {
+    padding: 8px;
+}
+
+.list-head-actions {
+    margin: 8px 0;
+}
