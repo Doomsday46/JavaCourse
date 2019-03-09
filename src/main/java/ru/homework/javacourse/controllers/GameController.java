@@ -2,8 +2,8 @@ package ru.homework.javacourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.homework.javacourse.models.Game;
 import ru.homework.javacourse.data.GameJpaRepository;
+import ru.homework.javacourse.models.Game;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

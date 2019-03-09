@@ -9,7 +9,6 @@ import ru.homework.javacourse.models.Tournament;
 import ru.homework.javacourse.models.User;
 import ru.homework.javacourse.services.TournamentService;
 import ru.homework.javacourse.services.UserService;
-import ru.homework.javacourse.services.implement.TournamentServiceImpl;
 
 import java.util.LinkedHashMap;
 import java.util.List;

@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.homework.javacourse.data.LocationJpaRepository;
 import ru.homework.javacourse.models.Location;
-import ru.homework.javacourse.models.Player;
 import ru.homework.javacourse.services.LocationService;
 
 import java.util.List;

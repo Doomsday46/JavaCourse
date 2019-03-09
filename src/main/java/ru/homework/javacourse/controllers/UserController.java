@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.*;
 import ru.homework.javacourse.models.Role;
 import ru.homework.javacourse.models.RoleName;
 import ru.homework.javacourse.models.User;
-import ru.homework.javacourse.services.*;
+import ru.homework.javacourse.services.RoleService;
+import ru.homework.javacourse.services.SecurityService;
+import ru.homework.javacourse.services.TemplateHelper;
+import ru.homework.javacourse.services.UserService;
 import ru.homework.javacourse.services.implement.UpdateUserValidator;
 
 import java.util.HashSet;

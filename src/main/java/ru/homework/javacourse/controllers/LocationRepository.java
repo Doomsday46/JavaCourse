@@ -2,8 +2,8 @@ package ru.homework.javacourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.homework.javacourse.models.Location;
 import ru.homework.javacourse.data.LocationJpaRepository;
+import ru.homework.javacourse.models.Location;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
