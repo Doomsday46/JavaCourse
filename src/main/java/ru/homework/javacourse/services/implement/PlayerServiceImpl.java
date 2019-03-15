@@ -34,4 +34,9 @@ public class PlayerServiceImpl implements PlayerService {
     public void save(Player player) {
         playerJpaRepository.saveAndFlush(player);
     }
+
+    @Override
+    public void delete(Long id) {
+        playerJpaRepository.delete(playerJpaRepository.findById(id).get());
+    }
 }

@@ -10,13 +10,14 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "tournaments")
+@Table(name = "tournament")
 public class Tournament {
     private Long idTournament;
     private String name;
-    private Date beginDate;
+    private Date startTournament;
+    private Date endTournament;
     private User assignedTo;
-    private Set<Game> games;
+
     private Set<Player> players;
     private Set<Location> locations;
 
@@ -24,9 +25,8 @@ public class Tournament {
 
     }
 
-    public Tournament(String name, Date beginDate) {
+    public Tournament(String name) {
         this.name = name;
-        this.beginDate = beginDate;
     }
 
     @Id
@@ -47,24 +47,6 @@ public class Tournament {
         this.name = name;
     }
 
-    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
-    public Date getBeginDate() {
-        return beginDate;
-    }
-
-    public void setBeginDate(Date beginDate) {
-        this.beginDate = beginDate;
-    }
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "tournament")
-    public Set<Game> getGames() {
-        return games;
-    }
-
-    public void setGames(Set<Game> games) {
-        this.games = games;
-    }
-
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tournament")
     public Set<Player> getPlayers() {
         return players;
@@ -73,6 +55,7 @@ public class Tournament {
     public void setPlayers(Set<Player> players) {
         this.players = players;
     }
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tournament")
     public Set<Location> getLocations() {
         return locations;
@@ -93,6 +76,24 @@ public class Tournament {
         this.assignedTo = assignedTo;
     }
 
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
+    public Date getStartTournament() {
+        return startTournament;
+    }
+
+    public void setStartTournament(Date startTournament) {
+        this.startTournament = startTournament;
+    }
+
+    @DateTimeFormat(pattern = "dd.MM.yyyy HH:mm:ss")
+    public Date getEndTournament() {
+        return endTournament;
+    }
+
+    public void setEndTournament(Date endTournament) {
+        this.endTournament = endTournament;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -110,8 +111,6 @@ public class Tournament {
     public String toString() {
         return "Tournament{" +
                 "idTournament=" + idTournament +
-                ", name='" + name + '\'' +
-                ", beginDate=" + beginDate +
-                '}';
+                ", name='" + name + '\''+'}';
     }
 }

@@ -8,4 +8,5 @@ public interface LocationService {
     Location findById(Long id);
     List<Location> getAll();
     void save(Location location);
+    void delete(Long id);
 }

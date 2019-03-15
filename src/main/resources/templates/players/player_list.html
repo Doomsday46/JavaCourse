@@ -22,9 +22,6 @@
             <th scope="col">Name</th>
             <th scope="col">Second Name</th>
             <th scope="col">Age</th>
-            <th scope="col">Tournament</th>
-            <th scope="col">Assigned To</th>
-            <th scope="col">Actions</th>
         </tr>
         </thead>
         <tbody>
@@ -33,10 +30,7 @@
             <td th:text="*{{firstName}}">Mark</td>
             <td th:text="*{{secondName}}">Otto</td>
             <td th:text="*{{age}}">21</td>
-            <td th:text="*{{tournament.name}}">mockTournament</td>
-            <td th:text="*{tournament.assignedTo != null} ? *{tournament.assignedTo.fullName} : ''">Otto</td>
             <td class="actions-cell">
-                <a class="btn btn-outline-success btn-sm" th:href="|/players/${player.idPlayer}/games|" role="button">Show Games</a>
                 <a class="btn btn-outline-dark btn-sm" th:href="|/players/${player.idPlayer}/edit|" role="button">Edit</a>
                 <a class="btn btn-outline-danger btn-sm" th:href="|/players/${player.idPlayer}/delete|" role="button">Delete</a>
             </td>

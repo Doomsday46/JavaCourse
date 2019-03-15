@@ -34,4 +34,9 @@ public class TournamentServiceImpl implements TournamentService {
     public void save(Tournament tournament) {
         tournamentJpaRepository.saveAndFlush(tournament);
     }
+
+    @Override
+    public void delete(Long id) {
+        tournamentJpaRepository.delete(tournamentJpaRepository.findById(id).get());
+    }
 }

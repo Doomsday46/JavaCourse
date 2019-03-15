@@ -11,15 +11,16 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "players")
+@Table(name = "player")
 public class Player {
 
     private Long idPlayer;
     private String firstName;
     private String secondName;
     private Date age;
+    private User assignedTo;
+
     private Tournament tournament;
-    private Set<Game> games = new HashSet<>();
 
     public Player() {
 
@@ -29,7 +30,6 @@ public class Player {
         this.firstName = firstName;
         this.secondName = secondName;
         this.age = age;
-        this.tournament = tournament;
     }
 
     @Id
@@ -68,6 +68,17 @@ public class Player {
     }
 
     @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    public User getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(User assignedTo) {
+        this.assignedTo = assignedTo;
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "tournament_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     public Tournament getTournament() {
@@ -76,15 +87,6 @@ public class Player {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
-    }
-
-    @ManyToMany(mappedBy = "players", targetEntity=Game.class)
-    public Set<Game> getGames() {
-        return games;
-    }
-
-    public void setGames(Set<Game> games) {
-        this.games = games;
     }
 
     @Override

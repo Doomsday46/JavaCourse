@@ -33,4 +33,9 @@ public class LocationServiceImpl implements LocationService {
     public void save(Location location) {
         locationJpaRepository.save(location);
     }
+
+    @Override
+    public void delete(Long id) {
+        locationJpaRepository.delete(locationJpaRepository.findById(id).get());
+    }
 }

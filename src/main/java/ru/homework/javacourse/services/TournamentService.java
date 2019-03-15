@@ -8,4 +8,5 @@ public interface TournamentService {
         Tournament findById(Long id);
         List<Tournament> getAll();
         void save(Tournament tournament);
+        void delete(Long id);
 }

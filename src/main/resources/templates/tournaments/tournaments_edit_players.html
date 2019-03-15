@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Edit Players')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <nav th:replace="layout :: nav"></nav>
+
+    <div class="container main-site-container">
+        <h1>Edit "Players"</h1>
+
+        <form th:object="${tournament}">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Second Name</th>
+                    <th scope="col">Age</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="player : ${players}" th:object="${player}" th:class="${player.tournament == null} ? 'table-danger':'table-success'">
+                        <th scope="row" th:text="${player.idPlayer}">0</th>
+                        <td th:text="*{{firstName}}">Mark</td>
+                        <td th:text="*{{secondName}}">Otto</td>
+                        <td th:text="*{{age}}">21</td>
+                        <td class="actions-cell">
+                            <a class="btn btn-success btn-sm"
+                               th:href="|/tournaments/${player.idPlayer}/${tournament.idTournament}/editPlayers/add|"
+                               role="button"
+                               th:hidden="${player.tournament == null} ? false: true"
+                            >Subscribe to tournament</a>
+                            <a class="btn btn-outline-danger btn-sm"
+                               th:href="|/tournaments/${player.idPlayer}/${tournament.idTournament}/editPlayers/delete|"
+                               role="button"
+                               th:hidden="${player.tournament == null} ? true: false"
+                            >Unsubscribe to tournament</a>
+                        </td>
+                </tr>
+                </tbody>
+            </table>
+            </fieldset>
+            <button type="submit" class="btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+
+    <th:block th:replace="layout :: footer">
+
+    </th:block>
+</body>
+</html>

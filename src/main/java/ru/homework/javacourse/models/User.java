@@ -16,6 +16,7 @@ public class User {
     private String passwordConfirm;
     private String fullName;
     private Date dateOfBirth;
+
     private Set<Role> roles;
 
     private Set<Tournament> tournaments;

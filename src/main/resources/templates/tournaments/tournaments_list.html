@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Tournaments')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav th:replace="layout :: nav"></nav>
+
+<div class="container main-site-container">
+    <h1>Tasks</h1>
+
+    <div class="list-head-actions">
+        <a class="btn btn-success" th:href="@{/tournaments/new}" role="button">Create new</a>
+    </div>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Start tournament</th>
+            <th scope="col">End tournament</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tournament : ${tournaments}" th:object="${tournament}">
+            <th scope="row" th:text="${tournament.idTournament}"></th>
+            <td th:text="*{{name}}">Mark</td>
+            <td th:text="*{{startTournament}}">Otto</td>
+            <td th:text="*{{endTournament}}">Otto</td>
+            <td class="actions-cell">
+                <a class="btn btn-outline-success btn-sm" th:href="|/tournaments/${tournament.idTournament}/players|" role="button">Show players</a>
+                <a class="btn btn-outline-success btn-sm" th:href="|/tournaments/${tournament.idTournament}/locations|" role="button">Show locations</a>
+                <a class="btn btn-outline-dark btn-sm" th:href="|/tournaments/${tournament.idTournament}/edit|" role="button">Edit</a>
+                <a class="btn btn-outline-danger btn-sm" th:href="|/tournaments/${tournament.idTournament}/delete|" role="button">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<th:block th:replace="layout :: footer">
+
+</th:block>
+</body>
+</html>

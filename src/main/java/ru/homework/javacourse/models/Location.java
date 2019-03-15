@@ -7,12 +7,14 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "locations")
+@Table(name = "location")
 public class Location {
     private Long idLocation;
     private String name;
     private String description;
     private Boolean state;
+    private User assignedTo;
+
     private Tournament tournament;
 
     public Location() {
@@ -59,7 +61,6 @@ public class Location {
         this.state = state;
     }
 
-
     @ManyToOne
     @JoinColumn(name = "tournament_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
@@ -69,6 +70,17 @@ public class Location {
 
     public void setTournament(Tournament tournament) {
         this.tournament = tournament;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    public User getAssignedTo() {
+        return assignedTo;
+    }
+
+    public void setAssignedTo(User assignedTo) {
+        this.assignedTo = assignedTo;
     }
 
     @Override

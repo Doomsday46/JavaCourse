@@ -1,55 +1,73 @@
 package ru.homework.javacourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.homework.javacourse.data.LocationJpaRepository;
 import ru.homework.javacourse.models.Location;
+import ru.homework.javacourse.models.Player;
+import ru.homework.javacourse.models.User;
+import ru.homework.javacourse.services.LocationService;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestController
 public class LocationRepository {
 
-    private LocationJpaRepository locationJpaRepository;
+    private final LocationService locationService;
 
     @Autowired
-    public LocationRepository(LocationJpaRepository locationJpaRepository) {
-        this.locationJpaRepository = locationJpaRepository;
+    public LocationRepository(LocationService locationService) {
+        this.locationService = locationService;
+
+        Location location = new Location();
+
+        location.setState(false);
+        location.setName( "tabel");
+        location.setDescription("this is table");
+
+        locationService.save(location);
     }
 
-    @GetMapping("/location")
-    @Transactional
-    public List<Location> getLocation() {
-        List<Location> list = new ArrayList<>();
-        locationJpaRepository.findAll().forEach(testEntity -> list.add(testEntity));
-        return list;
+    @RequestMapping(value = {"/locations"}, method = RequestMethod.GET)
+    public String listOfPlayers(Model model) {
+        List<Location> locations = locationService.getAll();
+        model.addAttribute("locations", locations);
+        return "locations/locations_list";
     }
 
-    @PostMapping("/location")
-    public void addLocation(@RequestBody Location object) {
-        locationJpaRepository.save(object);
+    @RequestMapping(value = {"/locations/{id}/edit"}, method = RequestMethod.GET)
+    public String getEditPlayerForm(Model model, @PathVariable("id") Long id) {
+        Location location = locationService.findById(id);
+        model.addAttribute("create", false);
+        model.addAttribute("location", location);
+        return "locations/locations_edit";
     }
 
-    @DeleteMapping("/location")
-    public void deleteLocation(@RequestBody Location object) {
-        locationJpaRepository.delete(object);
+    @RequestMapping(value = {"/locations/{id}/edit"}, method = RequestMethod.POST)
+    public String savePlayer(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model, @PathVariable("id") Long id) {
+        location.setIdLocation(id);
+        Location existingPlayer = locationService.findById(id);
+        locationService.save(location);
+        return "redirect:/locations";
     }
 
-    @PutMapping("/location/{id}")
-    public void updateLocation(@RequestBody Location newLocation, @PathVariable Long id) {
 
-        locationJpaRepository.findById(id)
-                .map(location -> {
-                    location.setDescription(newLocation.getDescription());
-                    location.setName(newLocation.getName());
-                    location.setState(newLocation.getState());
-                    return locationJpaRepository.save(location);
-                })
-                .orElseGet(() -> {
-                    newLocation.setIdLocation(id);
-                    return locationJpaRepository.save(newLocation);
-                });
+    @RequestMapping(value = {"/locations/new"}, method = RequestMethod.GET)
+    public String getNewTaskForm(Model model) {
+        model.addAttribute("create", true);
+        model.addAttribute("player", new Player());
+        return "locations/locations_edit";
     }
+
+    @RequestMapping(value = {"/locations/new"}, method = RequestMethod.POST)
+    public String saveTask(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model) {
+        locationService.save(location);
+        return "redirect:/locations";
+    }
+
 }

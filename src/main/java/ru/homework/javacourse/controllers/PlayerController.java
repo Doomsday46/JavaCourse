@@ -5,7 +5,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.homework.javacourse.models.Game;
 import ru.homework.javacourse.models.Player;
 import ru.homework.javacourse.models.User;
 import ru.homework.javacourse.services.PlayerService;
@@ -28,6 +27,21 @@ public class PlayerController {
         this.playerService = playerService;
         this.userService = userService;
         this.tournamentService = tournamentService;
+
+        Set<Player> players = new HashSet<>();
+
+        for (int i = 1; i < 7; i++) {
+            Player player = new Player();
+            player.setFirstName("FirsNameTest" + i);
+            player.setSecondName("SecondNameTest" + i);
+            player.setAge(new Date(1997,01,01));
+            players.add(player);
+        }
+        for (Player player:
+        players) {
+            playerService.save(player);
+        }
+
     }
 
     @RequestMapping(value = {"/players"}, method = RequestMethod.GET)
@@ -49,18 +63,10 @@ public class PlayerController {
     public String savePlayer(@ModelAttribute("player") Player player, BindingResult bindingResult, Model model, @PathVariable("id") Long id) {
         player.setIdPlayer(id);
         Player existingPlayer = playerService.findById(id);
-        player.setTournament(existingPlayer.getTournament());
         playerService.save(player);
         return "redirect:/players";
     }
 
-    @RequestMapping(value = {"/players/{id}/games"}, method = RequestMethod.GET)
-    public String listOfProjectTasks(Model model, @PathVariable("id") Long id) {
-        Player player = playerService.findById(id);
-        Set<Game> games = player.getGames();
-        model.addAttribute("games", games);
-        return "games/game_list";
-    }
 
     @RequestMapping(value = {"/players/new"}, method = RequestMethod.GET)
     public String getNewTaskForm(Model model) {
@@ -78,6 +84,7 @@ public class PlayerController {
     @RequestMapping(value = {"/players/{id}/editAssignedTo"}, method = RequestMethod.GET)
     public String getEditAssignedToForm(Model model, @PathVariable("id") Long id) {
         Player player = playerService.findById(id);
+
         List<User> users = userService.getAll();
         Map<Long, User> values = users.stream().collect(Collectors.toMap(
                 User::getId,
@@ -85,7 +92,7 @@ public class PlayerController {
                 (e1, e2) -> e2,
                 LinkedHashMap::new
         ));
-        Long selectedId = player.getTournament().getAssignedTo() != null ? player.getTournament().getAssignedTo().getId() : null;
+        Long selectedId = player.getAssignedTo() != null ? player.getAssignedTo().getId() : null;
         int selectedIndex = -1;
         int i = 0;
         for (User user : users) {
@@ -108,9 +115,9 @@ public class PlayerController {
 
         if (assignedToId != null) {
             User user = userService.findById(assignedToId);
-            player.getTournament().setAssignedTo(user);
+            player.setAssignedTo(user);
         } else {
-            player.getTournament().setAssignedTo(null);
+            player.setAssignedTo(null);
         }
         playerService.save(player);
 
