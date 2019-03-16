@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.homework.javacourse.models.Player;
 import ru.homework.javacourse.models.User;
 import ru.homework.javacourse.services.PlayerService;
+import ru.homework.javacourse.services.TemplateHelper;
 import ru.homework.javacourse.services.TournamentService;
 import ru.homework.javacourse.services.UserService;
 
@@ -21,33 +22,30 @@ public class PlayerController {
     private final PlayerService playerService;
     private final TournamentService tournamentService;
     private final UserService userService;
+    private final TemplateHelper templateHelper;
 
     @Autowired
-    public PlayerController(PlayerService playerService, UserService userService, TournamentService tournamentService) {
+    public PlayerController(TemplateHelper templateHelper, PlayerService playerService, UserService userService, TournamentService tournamentService) {
         this.playerService = playerService;
         this.userService = userService;
         this.tournamentService = tournamentService;
-
-        Set<Player> players = new HashSet<>();
-
-        for (int i = 1; i < 7; i++) {
-            Player player = new Player();
-            player.setFirstName("FirsNameTest" + i);
-            player.setSecondName("SecondNameTest" + i);
-            player.setAge(new Date(1997,1,1));
-            players.add(player);
-        }
-        for (Player player:
-        players) {
-            playerService.save(player);
-        }
+        this.templateHelper = templateHelper;
 
     }
 
     @RequestMapping(value = {"/players"}, method = RequestMethod.GET)
     public String listOfPlayers(Model model) {
         List<Player> players = playerService.getAll();
-        model.addAttribute("players", players);
+
+        User user = userService.findByUsername(templateHelper.getUsername());
+
+        Set<Player> _players = new HashSet<>();
+        for (Player player:players
+        ) {
+            if(player != null && player.getAssignedTo() != null && player.getAssignedTo().equals(user)) _players.add(player);
+        }
+
+        model.addAttribute("players", _players);
         return "players/player_list";
     }
 
@@ -77,50 +75,16 @@ public class PlayerController {
 
     @RequestMapping(value = {"/players/new"}, method = RequestMethod.POST)
     public String saveTask(@ModelAttribute("player") Player player, BindingResult bindingResult, Model model) {
+        User user = userService.findByUsername(templateHelper.getUsername());
+        player.setAssignedTo(user);
         playerService.save(player);
         return "redirect:/players";
     }
 
-    @RequestMapping(value = {"/players/{id}/editAssignedTo"}, method = RequestMethod.GET)
-    public String getEditAssignedToForm(Model model, @PathVariable("id") Long id) {
-        Player player = playerService.findById(id);
-
-        List<User> users = userService.getAll();
-        Map<Long, User> values = users.stream().collect(Collectors.toMap(
-                User::getId,
-                Function.identity(),
-                (e1, e2) -> e2,
-                LinkedHashMap::new
-        ));
-        Long selectedId = player.getAssignedTo() != null ? player.getAssignedTo().getId() : null;
-        int selectedIndex = -1;
-        int i = 0;
-        for (User user : users) {
-            if (Objects.equals(user.getId(), selectedId)) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-        model.addAttribute("create", false);
-        model.addAttribute("nullable", true);
-        model.addAttribute("player", player);
-        model.addAttribute("values", values);
-        model.addAttribute("checkedIndex", selectedIndex);
-        return "players/player_edit_assignedTo";
-    }
-
-    @RequestMapping(value = {"/players/{id}/editAssignedTo"}, method = RequestMethod.POST)
-    public String saveTask(Model model, @PathVariable("id") Long id, @RequestParam("radioAssignedTo") Long assignedToId) {
-        Player player = playerService.findById(id);
-
-        if (assignedToId != null) {
-            User user = userService.findById(assignedToId);
-            player.setAssignedTo(user);
-        } else {
-            player.setAssignedTo(null);
-        }
-        playerService.save(player);
-
+    @RequestMapping(value = {"/players/{id}/delete"}, method = RequestMethod.GET)
+    public String deletePlayer(@PathVariable("id") Long id) {
+        playerService.delete(id);
         return "redirect:/players";
     }
+
 }

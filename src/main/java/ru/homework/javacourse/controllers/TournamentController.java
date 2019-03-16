@@ -9,10 +9,7 @@ import ru.homework.javacourse.models.Location;
 import ru.homework.javacourse.models.Player;
 import ru.homework.javacourse.models.Tournament;
 import ru.homework.javacourse.models.User;
-import ru.homework.javacourse.services.LocationService;
-import ru.homework.javacourse.services.PlayerService;
-import ru.homework.javacourse.services.TournamentService;
-import ru.homework.javacourse.services.UserService;
+import ru.homework.javacourse.services.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -25,26 +22,29 @@ class TournamentController {
     private final PlayerService playerService;
     private final LocationService locationService;
     private final UserService userService;
+    private final TemplateHelper templateHelper;
 
     @Autowired
-    public TournamentController(TournamentService tournamentService, UserService userService,PlayerService playerService, LocationService locationService) {
+    public TournamentController(TournamentService tournamentService, UserService userService,PlayerService playerService, LocationService locationService, TemplateHelper templateHelper) {
         this.tournamentService = tournamentService;
         this.userService = userService;
         this.playerService = playerService;
         this.locationService = locationService;
-
-        Tournament tournament = new Tournament();
-        tournament.setName("TennisTest");
-        tournament.setStartTournament(new Date(2019,1,1));
-        tournament.setEndTournament(new Date(2019,1,9));
-
-        tournamentService.save(tournament);
+        this.templateHelper = templateHelper;
     }
 
     @RequestMapping(value = {"/tournaments"}, method = RequestMethod.GET)
     public String listOfTournaments(Model model) {
         List<Tournament> tournaments = tournamentService.getAll();
-        model.addAttribute("tournaments", tournaments);
+
+        User user = userService.findByUsername(templateHelper.getUsername());
+
+        Set<Tournament> _tournaments = new HashSet<>();
+        for (Tournament tournament:tournaments
+             ) {
+            if(tournament != null && tournament.getAssignedTo() != null && tournament.getAssignedTo().equals(user)) _tournaments.add(tournament);
+        }
+        model.addAttribute("tournaments",_tournaments );
         return "tournaments/tournaments_list";
     }
 
@@ -81,49 +81,9 @@ class TournamentController {
 
     @RequestMapping(value = {"/tournaments/new"}, method = RequestMethod.POST)
     public String saveTask(@ModelAttribute("tournament") Tournament tournament, BindingResult bindingResult, Model model) {
+        User user = userService.findByUsername(templateHelper.getUsername());
+        tournament.setAssignedTo(user);
         tournamentService.save(tournament);
-        return "redirect:/tournaments";
-    }
-
-    @RequestMapping(value = {"/tournaments/{id}/editAssignedTo"}, method = RequestMethod.GET)
-    public String getEditAssignedToForm(Model model, @PathVariable("id") Long id) {
-        Tournament tournament = tournamentService.findById(id);
-        List<User> users = userService.getAll();
-        Map<Long, User> values = users.stream().collect(Collectors.toMap(
-                User::getId,
-                Function.identity(),
-                (e1, e2) -> e2,
-                LinkedHashMap::new
-        ));
-        Long selectedId = tournament.getAssignedTo() != null ? tournament.getAssignedTo().getId() : null;
-        int selectedIndex = -1;
-        int i = 0;
-        for (User user : users) {
-            if (Objects.equals(user.getId(), selectedId)) {
-                selectedIndex = i;
-            }
-            i++;
-        }
-        model.addAttribute("create", false);
-        model.addAttribute("nullable", true);
-        model.addAttribute("tournament", tournament);
-        model.addAttribute("values", values);
-        model.addAttribute("checkedIndex", selectedIndex);
-        return "tournaments_edit_assignedTo";
-    }
-
-    @RequestMapping(value = {"/tournaments/{id}/editAssignedTo"}, method = RequestMethod.POST)
-    public String saveTournament(Model model, @PathVariable("id") Long id, @RequestParam("radioAssignedTo") Long assignedToId) {
-        Tournament tournament = tournamentService.findById(id);
-
-        if (assignedToId != null) {
-            User user = userService.findById(assignedToId);
-            tournament.setAssignedTo(user);
-        } else {
-            tournament.setAssignedTo(null);
-        }
-        tournamentService.save(tournament);
-
         return "redirect:/tournaments";
     }
 
