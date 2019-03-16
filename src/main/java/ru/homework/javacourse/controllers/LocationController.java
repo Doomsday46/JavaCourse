@@ -1,6 +1,7 @@
 package ru.homework.javacourse.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +16,13 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@RestController
-public class LocationRepository {
+@Controller
+public class LocationController {
 
     private final LocationService locationService;
 
     @Autowired
-    public LocationRepository(LocationService locationService) {
+    public LocationController(LocationService locationService) {
         this.locationService = locationService;
 
         Location location = new Location();
@@ -34,22 +35,23 @@ public class LocationRepository {
     }
 
     @RequestMapping(value = {"/locations"}, method = RequestMethod.GET)
-    public String listOfPlayers(Model model) {
+    public String listOfLocations(Model model) {
         List<Location> locations = locationService.getAll();
         model.addAttribute("locations", locations);
         return "locations/locations_list";
     }
 
     @RequestMapping(value = {"/locations/{id}/edit"}, method = RequestMethod.GET)
-    public String getEditPlayerForm(Model model, @PathVariable("id") Long id) {
+    public String getEditLocationForm(Model model, @PathVariable("id") Long id) {
         Location location = locationService.findById(id);
         model.addAttribute("create", false);
         model.addAttribute("location", location);
+        model.addAttribute("readonly",false);
         return "locations/locations_edit";
     }
 
     @RequestMapping(value = {"/locations/{id}/edit"}, method = RequestMethod.POST)
-    public String savePlayer(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model, @PathVariable("id") Long id) {
+    public String saveLocation(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model, @PathVariable("id") Long id) {
         location.setIdLocation(id);
         Location existingPlayer = locationService.findById(id);
         locationService.save(location);
@@ -58,14 +60,15 @@ public class LocationRepository {
 
 
     @RequestMapping(value = {"/locations/new"}, method = RequestMethod.GET)
-    public String getNewTaskForm(Model model) {
+    public String getNewLocationForm(Model model) {
         model.addAttribute("create", true);
-        model.addAttribute("player", new Player());
+        model.addAttribute("location", new Location());
+
         return "locations/locations_edit";
     }
 
     @RequestMapping(value = {"/locations/new"}, method = RequestMethod.POST)
-    public String saveTask(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model) {
+    public String saveLocation(@ModelAttribute("Location") Location location, BindingResult bindingResult, Model model) {
         locationService.save(location);
         return "redirect:/locations";
     }

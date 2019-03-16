@@ -48,6 +48,7 @@ public class Tournament {
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tournament")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     public Set<Player> getPlayers() {
         return players;
     }
@@ -57,6 +58,7 @@ public class Tournament {
     }
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "tournament")
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
     public Set<Location> getLocations() {
         return locations;
     }

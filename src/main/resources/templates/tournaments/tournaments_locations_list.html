@@ -11,10 +11,6 @@
 <div class="container main-site-container">
     <h1>Locations</h1>
 
-    <div class="list-head-actions">
-        <a class="btn btn-success" th:href="@{/locations/new}" role="button">Create new</a>
-    </div>
-
     <table class="table">
         <thead>
         <tr>
@@ -30,10 +26,6 @@
             <td th:text="*{{name}}">Mark</td>
             <td th:text="*{{description}}">Otto</td>
             <td th:text="*{{state}}">21</td>
-            <td class="actions-cell">
-                <a class="btn btn-outline-dark btn-sm" th:href="|/locations/${location.idLocation}/edit|" role="button">Edit</a>
-                <a class="btn btn-outline-danger btn-sm" th:href="|/locations/${location.idLocation}/delete|" role="button">Delete</a>
-            </td>
         </tr>
         </tbody>
     </table>

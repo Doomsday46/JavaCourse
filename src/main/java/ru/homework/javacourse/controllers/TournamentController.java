@@ -35,8 +35,8 @@ class TournamentController {
 
         Tournament tournament = new Tournament();
         tournament.setName("TennisTest");
-        tournament.setStartTournament(new Date(2019,01,01));
-        tournament.setEndTournament(new Date(2019,01,9));
+        tournament.setStartTournament(new Date(2019,1,1));
+        tournament.setEndTournament(new Date(2019,1,9));
 
         tournamentService.save(tournament);
     }
@@ -137,14 +137,14 @@ class TournamentController {
     public String listOfPlayerForTournament(Model model, @PathVariable("id") Long id) {
         Set<Player> players = tournamentService.findById(id).getPlayers();
         model.addAttribute("players", players);
-        return "players/player_list";
+        return "tournaments/tournaments_player_list";
     }
 
     @RequestMapping(value = {"/tournaments/{id}/locations"}, method = RequestMethod.GET)
     public String listOfLocationsForTournament(Model model, @PathVariable("id") Long id) {
         Set<Location> locations = tournamentService.findById(id).getLocations();
         model.addAttribute("locations", locations);
-        return "locations/location_list";
+        return "tournaments/tournaments_locations_list";
     }
 
     @RequestMapping(value = {"/tournaments/{id}/editPlayers"}, method = RequestMethod.GET)

@@ -19,6 +19,7 @@
                     <th scope="col">Name</th>
                     <th scope="col">Second Name</th>
                     <th scope="col">Age</th>
+                    <th scope="col">Tournament</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,7 @@
                         <td th:text="*{{firstName}}">Mark</td>
                         <td th:text="*{{secondName}}">Otto</td>
                         <td th:text="*{{age}}">21</td>
+                        <td th:hidden="${player.tournament == null} ? true: false" th:text="${player.tournament == null} ? '': *{{tournament.name}} "></td>>
                         <td class="actions-cell">
                             <a class="btn btn-success btn-sm"
                                th:href="|/tournaments/${player.idPlayer}/${tournament.idTournament}/editPlayers/add|"

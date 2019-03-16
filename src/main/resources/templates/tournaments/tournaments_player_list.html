@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout :: head('Players')">
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<nav th:replace="layout :: nav"></nav>
+
+<div class="container main-site-container">
+    <h1>Players</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Second Name</th>
+            <th scope="col">Age</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="player : ${players}" th:object="${player}">
+            <th scope="row" th:text="${player.idPlayer}">0</th>
+            <td th:text="*{{firstName}}">Mark</td>
+            <td th:text="*{{secondName}}">Otto</td>
+            <td th:text="*{{age}}">21</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<th:block th:replace="layout :: footer">
+
+</th:block>
+</body>
+</html>

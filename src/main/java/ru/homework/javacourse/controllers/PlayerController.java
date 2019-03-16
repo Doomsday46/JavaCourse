@@ -34,7 +34,7 @@ public class PlayerController {
             Player player = new Player();
             player.setFirstName("FirsNameTest" + i);
             player.setSecondName("SecondNameTest" + i);
-            player.setAge(new Date(1997,01,01));
+            player.setAge(new Date(1997,1,1));
             players.add(player);
         }
         for (Player player:
